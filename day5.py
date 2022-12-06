@@ -4,26 +4,27 @@ with open('data/my_input/5.in') as f:
 
 num=lambda x : re.findall(r'\d+',x)
 
-#         [G]         [D]     [Q]    
-# [P]     [T]         [L] [M] [Z]    
-# [Z] [Z] [C]         [Z] [G] [W]    
-# [M] [B] [F]         [P] [C] [H] [N]
-# [T] [S] [R]     [H] [W] [R] [L] [W]
-# [R] [T] [Q] [Z] [R] [S] [Z] [F] [P]
-# [C] [N] [H] [R] [N] [H] [D] [J] [Q]
-# [N] [D] [M] [G] [Z] [F] [W] [S] [S]
+# [T]     [Q]             [S]        
+# [R]     [M]             [L] [V] [G]
+# [D] [V] [V]             [Q] [N] [C]
+# [H] [T] [S] [C]         [V] [D] [Z]
+# [Q] [J] [D] [M]     [Z] [C] [M] [F]
+# [N] [B] [H] [N] [B] [W] [N] [J] [M]
+# [P] [G] [R] [Z] [Z] [C] [Z] [G] [P]
+# [B] [W] [N] [P] [D] [V] [G] [L] [T]
+#  1   2   3   4   5   6   7   8   9 
 
 
 def part1and2(lines,part1):
-    l1=['N','C','R','T','M','Z','P']
-    l2=['D','N','T','S','B','Z']
-    l3=['M','H','Q','R','F','C','T','G']
-    l4=['G','R','Z']
-    l5=['Z','N','R','H']
-    l6=['F','H','S','W','P','Z','L','D']
-    l7=['W','D','Z','R','C','G','M']
-    l8=['S','J','F','L','H','W','Z','Q']
-    l9=['S','Q','P','W','N']
+    l1=['B','P','N','Q','H','D','R','T']
+    l2=['W','G','B','J','T','V']
+    l3=['N','R','H','D','S','V','M','Q']
+    l4=['P','Z','N','M','C']
+    l5=['D','Z','B']
+    l6=['V','C','W','Z']
+    l7=['G','Z','N','C','V','Q','L','S']
+    l8=['L','G','J','M','D','N','V']
+    l9=['T','P','M','F','Z','C','G']
     lis=[]
     lis.append([])
     lis.append(l1)
