@@ -73,6 +73,16 @@ def part1and2(lines):
         move,nummove= line.split(" ")
         current_pos_head,current_pos_tail=move_record_tail(move,nummove,current_pos_head,current_pos_tail,all_pos_tail)
     #print_grid(set(all_pos_tail))
-    return len(set(all_pos_tail))
+    
+    retour1 = len(set(all_pos_tail))
+    
+    for _ in range(8):
+        current_pos_tail=(0,0)
+        all_pos_tai2=[current_pos_tail]
+        for pos in all_pos_tail:
+            current_pos_tail=move_tail(current_pos_tail, pos)
+            all_pos_tai2.append(current_pos_tail)
+        all_pos_tail=all_pos_tai2
+    return retour1, len(set(all_pos_tail))
     
 print(part1and2(lines))
