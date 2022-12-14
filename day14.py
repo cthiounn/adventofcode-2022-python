@@ -61,12 +61,15 @@ def part1and2(alllines):
     print_grid(d)
     source=(500,0)
     sourcex,sourcey=source
-    abyss_level= max([ y for x,y in d.keys()])
-    abyss_level_reached=False
-    while not abyss_level_reached:
+    abyss_level= max([ y for x,y in d.keys()])+2
+    
+    for i in range(-1000,1000):
+        d[(i,abyss_level)]="#"
+    
+    while (sourcex,sourcey) not in d :
         newx,newy=sourcex,sourcey
         newpoint=False
-        while not (abyss_level_reached or newpoint):
+        while not newpoint:
             
             if (newx,newy+1) in d and (newx-1,newy+1) in d and (newx+1,newy+1) in d:
                 d[(newx,newy)]='o'
@@ -77,9 +80,8 @@ def part1and2(alllines):
                 newx-=1
             elif (newx,newy+1) in d:
                 newx-=1
-            abyss_level_reached=(newy>=abyss_level)
             newy+=1
-    print_grid(d)
+
     return sum([1 for v in d.values() if v=='o'])
 
 print(part1and2(alllines))
