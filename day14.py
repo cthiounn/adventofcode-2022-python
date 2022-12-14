@@ -4,7 +4,6 @@ with open("data/my_input/14.in") as f:
     alllines = [line.strip() for line in f if len(line.strip())]
 
 num= lambda x : re.findall(r"\d+",x)
-sign = lambda x: -1 if x < 0 else (1 if x > 0 else 0)
 
 def buildmap(d,l):
     all_int=deque(map(int,num(l)))
@@ -15,14 +14,11 @@ def buildmap(d,l):
         
         xx=all_int.popleft()
         yy=all_int.popleft()
-        print(x,y,xx,yy)
         if xx==x:
             if y<yy:
                 r=range(y,yy+1)
             else:
                 r=range(yy,y+1)
-
-            print("x=",r)
             for i in r:
                 d[(x,i)]='#'
         elif yy==y:
@@ -30,8 +26,6 @@ def buildmap(d,l):
                 r=range(x,xx+1)
             else:
                 r=range(xx,x+1)
-            
-            print("y=",r)
             for i in r:
                 d[(i,y)]='#'
         x=xx
@@ -53,14 +47,37 @@ def print_grid(d):
         print(st)
 
 def part1and2(alllines):
-    d=dict()
+    dd=dict()
     for l in alllines:
-        buildmap(d,l)
-        print(d)
-    
-    print_grid(d)
+        buildmap(dd,l)
+
     source=(500,0)
     sourcex,sourcey=source
+
+    d=dd.copy()
+    abyss_level= max([ y for x,y in d.keys()])
+    abyss_level_reached=False
+    while not abyss_level_reached:
+        newx,newy=sourcex,sourcey
+        newpoint=False
+        while not (abyss_level_reached or newpoint):
+            
+            if (newx,newy+1) in d and (newx-1,newy+1) in d and (newx+1,newy+1) in d:
+                d[(newx,newy)]='o'
+                newpoint=True
+            elif (newx,newy+1) in d and (newx-1,newy+1) in d:
+                newx+=1
+            elif (newx,newy+1) in d and (newx+1,newy+1) in d:
+                newx-=1
+            elif (newx,newy+1) in d:
+                newx-=1
+            abyss_level_reached=(newy>=abyss_level)
+            newy+=1
+
+    part1=sum([1 for v in d.values() if v=='o'])
+
+    
+    d=dd.copy()
     abyss_level= max([ y for x,y in d.keys()])+2
     
     for i in range(-1000,1000):
@@ -82,6 +99,6 @@ def part1and2(alllines):
                 newx-=1
             newy+=1
 
-    return sum([1 for v in d.values() if v=='o'])
+    return  part1,sum([1 for v in d.values() if v=='o'])
 
 print(part1and2(alllines))
