@@ -34,6 +34,7 @@ def xy_unfound(x, l):
 
 
 def part1and2(alllines, numy):
+    d = defaultdict(list)
     dd = defaultdict(list)
     points_to_check = []
     for l in alllines:
@@ -57,6 +58,12 @@ def part1and2(alllines, numy):
                         dd[y - i] += [(x, x)]
                         points_to_check.append((x - 1, y - i))
                         points_to_check.append((x + 1, y - i))
+                    
+
+                    if y+i==numy :
+                        d[y+i]+=[(x-rayon,x+rayon)]
+                    if y-i==numy :
+                        d[y-i]+=[(x-rayon,x+rayon)]
                 else:
                     if 0 <= y + i <= 4000000:
                         dd[y + i] += [(x - rayon, x + rayon)]
@@ -66,13 +73,19 @@ def part1and2(alllines, numy):
                         dd[y - i] += [(x - rayon, x + rayon)]
                         points_to_check.append((x - rayon - 1, y - i))
                         points_to_check.append((x + rayon + 1, y - i))
-
-    s = set()
+                    if y+i==numy :
+                        d[y+i]+=[(x-rayon,x+rayon)]
+                    if y-i==numy and i != 0:
+                        d[y-i]+=[(x-rayon,x+rayon)]
+    lr=d[numy]
+    s=set()
+    for i in range(len(lr)):
+        a,b =lr[i]
+        s|=set(range(a,b))
     for (x, y) in points_to_check:
         if 0 <= x <= 4000000 and xy_unfound(x, dd[y]):
-            print(x, y)
-            break
-    return len(s), x * 4000000 + y
+            return len(s), x * 4000000 + y
+    return len(s), None
 
 
 print(part1and2(alllines, 2000000))
