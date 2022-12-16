@@ -1,102 +1,78 @@
 import re
 from collections import defaultdict
+
 with open("data/my_input/15.in") as f:
     alllines = [line.strip() for line in f if len(line.strip())]
 
-num= lambda x : re.findall(r"-?\d+",x)
-
+num = lambda x: re.findall(r"-?\d+", x)
 
 
 def print_grid(d):
-    minx=min([x for x,y in d.keys()])
-    maxx=max([x for x,y in d.keys()])
-    miny=min([y for x,y in d.keys()])
-    maxy=max([y for x,y in d.keys()])
-    for j in range(miny,maxy+1):
-        st=""
-        for i in range(minx,maxx+1):
-            if (i,j) in d :
-                st+=d[(i,j)]
+    minx = min([x for x, y in d.keys()])
+    maxx = max([x for x, y in d.keys()])
+    miny = min([y for x, y in d.keys()])
+    maxy = max([y for x, y in d.keys()])
+    for j in range(miny, maxy + 1):
+        st = ""
+        for i in range(minx, maxx + 1):
+            if (i, j) in d:
+                st += d[(i, j)]
             else:
-                st+="."
+                st += "."
         print(st)
 
-def compute_taxicab_d(x,y,xx,yy):
-    return abs(x-xx)+abs(y-yy)
 
-def decompose(a,b):
-    if a ==b :
-        return None, a, None
-    x,y=a
-    xx,yy=b
-    if x==xx:
-        left=None
-        nextx=xx
-    elif x<xx:
-        left=(x,xx-1)
-        nextx=xx
-    else:
-        left=(xx,x-1)
-        nextx=x
+def compute_taxicab_d(x, y, xx, yy):
+    return abs(x - xx) + abs(y - yy)
 
-    if y==yy:
-        right=None
-        prevy=y
-    elif y<yy:
-        right=(y+1,yy)
-        prevy=y
-    else:
-        right=(yy+1,y)
-        prevy=yy
-    if nextx>prevy:
-        return a,None,b
-    return left,(nextx,prevy),right
 
-def part1and2(alllines,numy):
-    d=dict()
-    dd=defaultdict(list)
+def xy_unfound(x, l):
+    for (xx, yy) in l:
+        if x in range(xx, yy + 1):
+            return False
+    return True
+
+
+def part1and2(alllines, numy):
+    dd = defaultdict(list)
+    points_to_check = []
     for l in alllines:
-        coordinates=num(l)
+        coordinates = num(l)
         if coordinates:
-            x,y,xx,yy=list(map(int,coordinates))
-            taxicab_d=compute_taxicab_d(x,y,xx,yy)
-            for i in range(taxicab_d):
-                rayon=taxicab_d-i
-                if i!=0:
-                    if y+i==numy :
-                        dd[y+i]+=[(x-rayon,x+rayon)]
-                        break
-                    if y-i==numy :
-                        dd[y-i]+=[(x-rayon,x+rayon)]
-                        break
+            x, y, xx, yy = list(map(int, coordinates))
+            taxicab_d = compute_taxicab_d(x, y, xx, yy)
+            for i in range(taxicab_d + 2):
+                rayon = taxicab_d - i
+                if i == taxicab_d + 1:
+                    if 0 <= y + i <= 4000000:
+                        points_to_check.append((x, y + i))
+                    if 0 <= y - i <= 4000000:
+                        points_to_check.append((x, y - i))
+                elif i == taxicab_d:
+                    if 0 <= y + i <= 4000000:
+                        dd[y + i] += [(x, x)]
+                        points_to_check.append((x - 1, y + i))
+                        points_to_check.append((x + 1, y + i))
+                    if 0 <= y - i <= 4000000:
+                        dd[y - i] += [(x, x)]
+                        points_to_check.append((x - 1, y - i))
+                        points_to_check.append((x + 1, y - i))
                 else:
-                    if y==numy :
-                        dd[y]+=[(x-rayon,x+rayon)]
-                        break
-            d[(x,y)]="S"
-            d[(xx,yy)]="B"
-    lr=dd[numy]
-    s=set()
-    for i in range(len(lr)):
-        a,b =lr[i]
-        s|=set(range(a,b))
-    # for _ in range(1000):
-    #     stop=False
-    #     for i in range(len(lr)):
-    #         if not stop:
-    #             for j in range(i+1,len(lr)):
-    #                 a,b,c = decompose(lr[i],lr[j])
-    #                 if b is not None :
-    #                     stop=True
-    #                     lr[i]=a
-    #                     lr[j]=c
-    #                     lr.append(b)
-    #                     while None in lr:
-    #                         lr.remove(None)
-    #                     break
-        
-    
-    # print(lr)
-    
-    return len(s)
-print(part1and2(alllines,2000000))
+                    if 0 <= y + i <= 4000000:
+                        dd[y + i] += [(x - rayon, x + rayon)]
+                        points_to_check.append((x - rayon - 1, y + i))
+                        points_to_check.append((x + rayon + 1, y + i))
+                    if 0 <= y - i <= 4000000 and i != 0:
+                        dd[y - i] += [(x - rayon, x + rayon)]
+                        points_to_check.append((x - rayon - 1, y - i))
+                        points_to_check.append((x + rayon + 1, y - i))
+
+    s = set()
+    for (x, y) in points_to_check:
+        if 0 <= x <= 4000000 and xy_unfound(x, dd[y]):
+            print(x, y)
+            break
+    return len(s), x * 4000000 + y
+
+
+print(part1and2(alllines, 2000000))
